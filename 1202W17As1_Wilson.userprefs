@@ -1,0 +1,17 @@
+﻿<Properties StartupConfiguration="{6E32FBAB-EF4D-4EEA-B380-4EB9719632AA}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="1202W17As1_Wilson/Andrew_Account.cs">
+    <Files>
+      <File FileName="1202W17As1_Wilson/Program.cs" Line="36" Column="4" />
+      <File FileName="1202W17As1_Wilson/Andrew_Bank.cs" Line="48" Column="77" />
+      <File FileName="1202W17As1_Wilson/Andrew_Account.cs" Line="54" Column="26" />
+      <File FileName="1202W17As1_Wilson/Andrew_Client.cs" Line="72" Column="58" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.ItemProperties.1202W17As1__Wilson PreferredExecutionTarget="MonoDevelop.Default" />
+  <MultiItemStartupConfigurations />
+</Properties>
