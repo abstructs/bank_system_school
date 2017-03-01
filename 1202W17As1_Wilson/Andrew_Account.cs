@@ -42,14 +42,16 @@ namespace W17As1_Wilson
 			while (true)
 			{
 				Console.WriteLine("What would you like to do?");
-				decision = ask_for_int("1: View account information including bank details.\n2: Enter Client Information.\n3: Enter Bank Information.\n0: Back.");
+				decision = ask_for_int("1: View client information.\n2: Enter Client Information.\n3: Enter Bank Information.\n0: Back.");
 
 				switch (decision)
 				{
 					case (0): // go back
+						Console.Clear();
 						return;
 					case(1): // show user info
-						Console.WriteLine(ToString()); // uses this classes overridden tostring method
+						Console.WriteLine(client_info() + "\n" + bank_info()); // uses this classes overridden tostring method
+						Console.ReadKey();
 						break;
 					case (2):
 						set_user_info(); // user can input values for client information
@@ -60,6 +62,7 @@ namespace W17As1_Wilson
 					default:
 						Console.Clear();
 						Console.WriteLine("Please choose a valid option");
+						Console.ReadKey();
 						break;
 				}
 
@@ -70,6 +73,7 @@ namespace W17As1_Wilson
 		private static decimal ask_for_decimal(string message) // prompts the user for a decimal ensuring the right number is returned
 		{
 			decimal result;
+
 			while (true)
 			{
 				Console.WriteLine(message); // write message
@@ -103,7 +107,7 @@ namespace W17As1_Wilson
 				                  "6: Year of Report. Currently: {5}\n0: Back", opening_balance, monthly_deposit,
 				                  monthly_withdrawal, debit_transactions, month_of_report, year_of_report);
 				
-				decision = ask_for_int("Please enter a number from 0-6");
+				decision = ask_for_int("");
 
 				Console.Clear();
 
@@ -179,6 +183,7 @@ namespace W17As1_Wilson
 						break;
 					default:
 						Console.WriteLine("Something went wrong :-( !");
+						Console.ReadKey();
 						return;
 				}
 
@@ -258,13 +263,16 @@ namespace W17As1_Wilson
 
 		// class overrides
 
+		protected string bank_info()
+		{
+			return string.Format("Opening balance is: {0:N}\nDeposit amount is: {1:N}\nWithdrawal " +
+										 "amount is {2:N}\nFees for the month are: {3:N}\nClosing balance is: {4:N}\n",
+										 opening_balance, monthly_deposit, monthly_withdrawal, calculate_monthly_fees(), calulate_closing_balance());
+		}
+
 		public override string ToString() // returns a string of all the values for the account class
 		{
-			string bank_info = string.Format("The opening balance is: {0:N}\nThe deposit amount is: {1:N}\nThe withdrawal " +
-										 "amount is {2:N}\nThe fees for the month are: {3:N}\nThe closing balance is: {4:N}\n",
-										 opening_balance, monthly_deposit, monthly_withdrawal, calculate_monthly_fees(), calulate_closing_balance());
-
-			return client_info() + bank_info;
+			return client_info() + bank_info();
 		}
 	}
 }

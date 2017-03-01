@@ -59,7 +59,8 @@ namespace W17As1_Wilson
 						s_i_n = ask_for_int("Please enter the client's Social Security Number");
 						break;
 					default:
-						Console.WriteLine("Something went wrong :-( !");
+						Console.WriteLine("Please choose a valid option");
+						Console.ReadKey();
 						return;
 				}
 

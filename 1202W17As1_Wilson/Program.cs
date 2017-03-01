@@ -16,6 +16,7 @@ namespace W17As1_Wilson
 			Console.WriteLine("Press any key to continue...");
 			Console.ReadKey();
 		}
+
 		public static int ask_for_int(string message)
 		{
 			int result;
@@ -34,7 +35,7 @@ namespace W17As1_Wilson
 			greeting(); // greet the user
 			Andrew_Bank bank = new Andrew_Bank();
 
-			for (int i = 0; i < 5; i++)
+			for (int i = 0; i < 6; i++)
 			{
 				bank.create_new_account();
 			}
