@@ -11,6 +11,8 @@ namespace W17As1_Wilson
 		public decimal opening_balance = 0m; // information about state of bank account
 		public decimal monthly_deposit = 0m;
 		public decimal monthly_withdrawal = 0m;
+		private decimal interest_amount = 0m;
+
 		public int debit_transactions = 0;
 
 		// constructors
@@ -41,8 +43,9 @@ namespace W17As1_Wilson
 
 			while (true)
 			{
-				Console.WriteLine("What would you like to do?");
-				decision = ask_for_int("1: View client information.\n2: Enter Client Information.\n3: Enter Bank Information.\n0: Back.");
+				decision = ask_for_int(string.Format("Viewing {0} {1}'s bank account.\n\nWhat would you like to do?\n\n1: View client " +
+				                       "information.\n2: Enter Client Information.\n3: Enter Bank Information.\n" +
+                                       "0: Back.", first_name, last_name));
 
 				switch (decision)
 				{
@@ -50,7 +53,9 @@ namespace W17As1_Wilson
 						Console.Clear();
 						return;
 					case(1): // show user info
-						Console.WriteLine(client_info() + "\n" + bank_info()); // uses this classes overridden tostring method
+						Console.Clear();
+						Console.WriteLine("Information for {0} {1}'s account\n" + client_info() + "\n" + bank_info() + 
+						                  "\nPress any key to go back...", first_name, last_name); // uses this classes overridden tostring method
 						Console.ReadKey();
 						break;
 					case (2):
@@ -61,8 +66,9 @@ namespace W17As1_Wilson
 						break;
 					default:
 						Console.Clear();
-						Console.WriteLine("Please choose a valid option");
+						Console.WriteLine("Please choose a valid option...\nPress any key to continue...");
 						Console.ReadKey();
+						Console.Clear();
 						break;
 				}
 
@@ -93,19 +99,101 @@ namespace W17As1_Wilson
 			}
 		}
 
-		private void set_bank_info() // allows the user to change information about an account
+		private int ask_for_year()
+		{
+			while (true) // force user to input a value between 1 and 12
+			{
+				int year = ask_for_int(string.Format("What year is the report for? Enter a number 2000-{0}", DateTime.Now.Year));
+
+				if (year >= 2000 && year <= DateTime.Now.Year)
+				{
+					if (year == DateTime.Now.Year) // if the month is greater than the current month and the year is set to the current year
+					{
+						if (Convert.ToDateTime(month_of_report + "01 " + year_of_report.ToString()).Month > DateTime.Now.Month) // check if the month is greater than the current month
+						{
+							// warn the user that the month will change to the current month 
+							int change_decision;
+							Console.WriteLine("Warning: Will change month to the current month.\n");
+
+							Console.WriteLine("(Note: Does this because the currently set month \nis greater than the current month in the year.)\n");
+
+							change_decision = ask_for_int("Would you like to continue?\n1: Continue\n2: Cancel");
+							if (change_decision == 1)
+							{
+								month_of_report = new DateTime(this.year_of_report, DateTime.Now.Month, 1).ToString("MMM");
+							}
+							else
+							{
+								return year_of_report; // return the currently set year
+							}
+
+						}
+					}
+					return year;
+				}
+				else
+				{
+					Console.Clear();
+					Console.WriteLine("Invalid year. Please input a valid year:");
+				}
+			}
+		}
+
+		private string ask_for_month()
+		{
+			while (true) // force user to input a value between 1 and 12
+			{
+				int month;
+				if (year_of_report == DateTime.Now.Year) // if the report year is the current year we only want to allow months up to the current month
+				{
+					month = ask_for_int(string.Format("What month is the report for? Enter a number from 1-{0}\n" +
+													  "(Only accepts dates up to the current date)\n", DateTime.Now.Month));
+				}
+				else
+				{
+					month = ask_for_int("What month is the report for? Enter a number 1-12");
+				}
+
+				if (month > 0 && month <= 12)
+				{
+					// make sure month entered is less than current month if year is the same
+					if (year_of_report == DateTime.Now.Year && DateTime.Now.Month < month)
+					{
+						string error_month = new DateTime(year_of_report, month, 1).ToString("MMM");
+						Console.Clear();
+						Console.WriteLine("Cannot make reports ahead of the current date.\n" +
+										  "You entered {0} {1}\nThe current date is: {2} {3}" +
+										  "\nPlease enter a valid month:", year_of_report, error_month,
+										  DateTime.Now.Year, DateTime.Now.ToString("MMM"));
+					}
+					else
+					{
+						return new DateTime(year_of_report, month, 1).ToString("MMM");
+					}
+				}
+				else
+				{
+					Console.WriteLine("Invalid number.");
+				}
+			}
+		}
+
+		private void set_bank_info() // allows the user to change information about an account 
 		{
 			Console.Clear();
 			int decision = -1;
-
+			string opening_msg = "What was the opening balance for the month?";
+			string deposit_msg = "How much money has been deposited?";
+			string withdrawal_msg = "How much money has been withdrawn?";
+			string transactions_msg = "How many transactions has there been ? ";
 			while (true) // run until user types 0
 			{
-				Console.WriteLine("Filing monthly report.");
-				Console.WriteLine("What would you like to input?\n1: Opening Balance. Currently: {0:N}.\n" +
-				                  "2: Monthly Deposit. Currently: {1:N}.\n3: Monthly Withdrawal. Currently: {2:N}.\n" +
-				                  "4: Debit Transaction Count. Currently: {3:N0}.\n5: Month of Report: {4}\n" +
-				                  "6: Year of Report. Currently: {5}\n0: Back", opening_balance, monthly_deposit,
-				                  monthly_withdrawal, debit_transactions, month_of_report, year_of_report);
+				Console.WriteLine("Filing account bank information.\n");
+				Console.WriteLine("What would you like to input?\n1: Opening Balance. Currently: {0:C}.\n" +
+				                  "2: Monthly Deposit. Currently: {1:C}.\n3: Monthly Withdrawal. Currently: {2:C}.\n" +
+				                  "4: Debit Transaction Count. Currently: {3:N0}.\n5: Year of Report: Currently: {4}\n" +
+				                  "6: Month of Report. Currently: {5}\n7: Enter all values at once.\n\nClosing balance: \t{6:C}\n\n0: Back", opening_balance, monthly_deposit,
+				                  monthly_withdrawal, debit_transactions, year_of_report, month_of_report, calulate_closing_balance());
 				
 				decision = ask_for_int("");
 
@@ -116,75 +204,60 @@ namespace W17As1_Wilson
 					case(0): // finish entering data
 						return;
 					case(1):
-						opening_balance = ask_for_decimal("What was the opening balance for the month?");
+						opening_balance = ask_for_decimal(opening_msg);
 						break;
 					case (2):
-						monthly_deposit = ask_for_decimal("How much money has been deposited?");
+						monthly_deposit = ask_for_decimal(deposit_msg);
 						break;
 					case (3):
-						monthly_withdrawal = ask_for_decimal("How much money has been withdrawn?");
+						monthly_withdrawal = ask_for_decimal(withdrawal_msg);
 						break;
 					case (4):
-						debit_transactions = ask_for_int("How many transactions has there been?");
+						debit_transactions = ask_for_int(transactions_msg);
 						break;
-					case (5):
-						while (true) // force user to input a value between 1 and 12
-						{
-							int month;
-							if (year_of_report == DateTime.Now.Year) // if the report year is the current year we only want to allow months up to the current month
-							{
-								month = ask_for_int(string.Format("What month is the report for? Enter a number from 1-{0}", DateTime.Now.Month));
-							}
-							else
-							{
-								month = ask_for_int("What month is the report for? Enter a number 1-12");
-							}
-
-							if (month > 0 && month <= 12)
-							{
-								// make sure month entered is less than current month if year is the same
-								if (year_of_report == DateTime.Now.Year && DateTime.Now.Month < month)  
-								{
-									string error_month= new DateTime(year_of_report, month, 1).ToString("MMM");
-									Console.Clear();
-									Console.WriteLine("Cannot make reports ahead of the current date.\n" +
-									                  "You entered {0} {1}\nThe current date is: {2} {3}" +
-									                  "\nPlease enter a valid month:", year_of_report, error_month,
-									                  DateTime.Now.Year, DateTime.Now.ToString("MMM"));
-								}
-								else
-								{
-									month_of_report = new DateTime(year_of_report, month, 1).ToString("MMM");
-									break;
-								}
-							}
-							else
-							{
-								Console.WriteLine("Invalid number.");
-							}
-						}
+					case(5):
+						year_of_report = ask_for_year();
 						break;
-					case(6):
-						while (true) // force user to input a value between 1 and 12
-						{
-							int year = ask_for_int(string.Format("What year is the report for? Enter a number 2000-{0}", DateTime.Now.Year));
+					case (6):
+						month_of_report = ask_for_month();
+						break;
+					case(7): // allow user to input all values in succession
 
-							if (year >= 2000 && year <= DateTime.Now.Year)
-							{
-								year_of_report = year;
-								break;
-							}
-							else
-							{
-								Console.Clear();
-								Console.WriteLine("Invalid year. Please input a valid year:");
-							}
-						}
+						Console.Clear();
+
+						Console.WriteLine("Filing full bank report, please enter appropriate values below.\n");
+
+						opening_balance = ask_for_decimal(opening_msg);
+
+						Console.Clear();
+
+						monthly_deposit = ask_for_decimal(deposit_msg);
+
+						Console.Clear();
+
+						monthly_withdrawal = ask_for_decimal(withdrawal_msg);
+
+						Console.Clear();
+
+						debit_transactions = ask_for_int(transactions_msg);
+
+						Console.Clear();
+
+						year_of_report = ask_for_year(); // gets year
+
+						Console.Clear();
+
+						month_of_report = ask_for_month();
+
+						Console.Clear();
+
 						break;
 					default:
-						Console.WriteLine("Something went wrong :-( !");
+						Console.Clear();
+						Console.WriteLine("Please choose a valid option...\nPress any key to continue...");
 						Console.ReadKey();
-						return;
+						Console.Clear();
+						break;
 				}
 
 				Console.Clear();
@@ -233,9 +306,9 @@ namespace W17As1_Wilson
 
 		private decimal calculate_interest_amount(decimal balance) // calculates the amount of interest the client as earned for the month
 		{
-			decimal interest_amount = balance * INTEREST_RATE;
-
-			return interest_amount;
+			decimal interest = balance * INTEREST_RATE;
+			interest_amount = interest; // save interest rate globally as well
+			return interest;
 		}
 
 		private decimal calculate_monthly_fees() // calculates the amount of fees for the account
@@ -261,14 +334,16 @@ namespace W17As1_Wilson
 			return new_balance; // return the new balance
 		}
 
-		// class overrides
+
 
 		protected string bank_info()
 		{
-			return string.Format("Opening balance is: {0:N}\nDeposit amount is: {1:N}\nWithdrawal " +
-										 "amount is {2:N}\nFees for the month are: {3:N}\nClosing balance is: {4:N}\n",
-										 opening_balance, monthly_deposit, monthly_withdrawal, calculate_monthly_fees(), calulate_closing_balance());
+			return string.Format("Opening balance is: {0:C}\nDeposit amount is: {1:C}\nWithdrawal " +
+			                     "amount is {2:C}\nFees for the month are: {3:C}\nInterest Earned is: {4:C}\n\nClosing balance is: {5:C}\n",
+			                     opening_balance, monthly_deposit, monthly_withdrawal, calculate_monthly_fees(), interest_amount, calulate_closing_balance());
 		}
+
+		// class override
 
 		public override string ToString() // returns a string of all the values for the account class
 		{

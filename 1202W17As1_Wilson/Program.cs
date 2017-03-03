@@ -4,19 +4,6 @@ namespace W17As1_Wilson
 {
 	class Andrew_MainClass
 	{
-		public static void greeting() 
-		{
-			string bank_name = "Bank of George Brown";
-			string manager_first_name = "Andrew";
-			string manager_last_name = "Wilson";
-
-			Console.WriteLine("Welcome To {0} - <G><B><C>", bank_name);
-			Console.WriteLine("___________________________________________\n");
-			Console.WriteLine("Manager Name: {0} {1}\nStudent Number: 101069860", manager_first_name, manager_last_name);
-			Console.WriteLine("Press any key to continue...");
-			Console.ReadKey();
-		}
-
 		public static int ask_for_int(string message)
 		{
 			int result;
@@ -32,15 +19,13 @@ namespace W17As1_Wilson
 
 		public static void Main(string[] args)
 		{
-			greeting(); // greet the user
 			Andrew_Bank bank = new Andrew_Bank();
 
-			for (int i = 0; i < 6; i++)
-			{
-				bank.create_new_account();
-			}
+			bank.create_new_account("Diana", "William", "22 Authorn", 1234321); // create some accounts to populate the existing accounts
+			bank.create_new_account("Kent", "Clarke", "17 Dupont", 32132121);
+			bank.create_new_account("Zebbra", "Zlaire", "2 Weston", 98798798);
 
-			bank.bank_menu();
+			bank.bank_menu(); // open up the bank menu
 
 		}
 	}

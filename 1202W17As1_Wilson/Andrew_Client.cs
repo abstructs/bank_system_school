@@ -31,7 +31,7 @@ namespace W17As1_Wilson
 
 			while (true) // run until user types 0
 			{
-				Console.WriteLine("What values would you like to enter?\n1: First Name. Currently: {0} \n" +
+				Console.WriteLine("Welcome to the profile menu!\nWhat values would you like to enter?\n\n1: First Name. Currently: {0} \n" +
 								  "2: Last Name. Currently: {1}\n3: Home Address. Currently: {2}\n" +
 								  "4: Social Security Number. Currently: {3}\n0: Back", first_name, last_name,
 				                  home_address, s_i_n);
@@ -59,8 +59,10 @@ namespace W17As1_Wilson
 						s_i_n = ask_for_int("Please enter the client's Social Security Number");
 						break;
 					default:
-						Console.WriteLine("Please choose a valid option");
+						Console.Clear();
+						Console.WriteLine("Please choose a valid option...\nPress any key to continue...");
 						Console.ReadKey();
+						Console.Clear();
 						return;
 				}
 
